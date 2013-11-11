@@ -2,6 +2,8 @@
 
 GoInstant Authentication for Your Ruby Application
 
+[![Build Status](https://magnum.travis-ci.com/goinstant/ruby-goinstant-auth.png?token=fy6GC4GtQkNjSzNF3geU&branch=master)](https://magnum.travis-ci.com/goinstant/ruby-goinstant-auth)
+
 This is an implementation of JWT tokens consistent with what's specified in the
 [GoInstant Users and Authentication
 Guide](https://developers.goinstant.com/v1/guides/users_and_authentication.html).
