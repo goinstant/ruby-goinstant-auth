@@ -47,7 +47,6 @@ describe GoInstant::Auth::Signer do
     parts.size.should == 3
 
     header = GoInstant::Auth.compact_decode(parts[0])
-    print "got header %s" % header.inspect
     header['typ'].should == 'JWT'
     header['alg'].should == 'HS256'
 
