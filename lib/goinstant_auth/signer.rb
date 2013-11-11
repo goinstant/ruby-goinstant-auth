@@ -115,7 +115,6 @@ module GoInstant
         headers[:alg] = 'HS256'
 
         signing_input = '%s.%s' % [headers, claims].map{ |x| Auth.compact_encode(x) }
-        print "signing_input %s\n" % signing_input
         sig = OpenSSL::HMAC::digest('SHA256', @binary_key, signing_input)
         return '%s.%s' % [ signing_input, Auth.encode64(sig) ]
       end
