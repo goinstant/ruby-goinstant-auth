@@ -46,8 +46,10 @@ module GoInstant
           raise TypeError.new('Signer requires key in base64url or base64 format')
         end
 
-        if @binary_key.size != 32 then
-          raise StandardError.new('key isn\'t exactly 32 bytes')
+        if @binary_key.size < 32 then
+          raise StandardError.new(
+            'expected key length >= 32 bytes, got %d bytes' % @binary_key.size
+          )
         end
       end
 
