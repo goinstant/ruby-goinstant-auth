@@ -42,24 +42,27 @@ jwt = signer.sign({
 })
 ```
 
-This token can be safely inlined into an ERB template
+This token can be safely inlined into an ERB template.  For example, a fairly
+basic templat for calling [`goinstant.connect`
+call](https://developers.goinstant.com/v1/javascript_api/connect.html) might
+look like this:
 
-```erb
+```html
 <script type="text/javascript">
   (function() {
-    // using a var like this prevents other javascript on the page from
-    // easily accessing or stealing the token:
-    var opts = {
-      user: "<%= token %>",
-      rooms: [ 'room-42' ]
-    };
+    var token = "<%= token %>";
     var url = 'https://goinstant.net/YOURACCOUNT/YOURAPP'
 
-    goinstant.connect(url, opts, function(err, connection) {
+    var opts = {
+      user: token,
+      rooms: [ 'room-42' ]
+    };
+
+    goinstant.connect(url, opts, function(err, conn, room) {
       if (err) {
         throw err;
       }
-      runYourApp(connection);
+      runYourApp(room);
     });
   }());
 </script>
