@@ -34,6 +34,21 @@ module GoInstant
     class SignerError < StandardError
     end
 
+    REQUIRED_CLAIMS = {
+      :domain => :iss,
+      :id => :sub,
+      :display_name => :dn
+    }
+
+    OPTIONAL_CLAIMS = {
+      :groups => :g
+    }
+
+    REQUIRED_GROUP_CLAIMS = {
+      :id => :id,
+      :display_name => :dn
+    }
+
     class Signer
 
       def initialize(secret_key)
@@ -52,21 +67,6 @@ module GoInstant
           )
         end
       end
-
-      @@REQUIRED_CLAIMS = {
-        :domain => :iss,
-        :id => :sub,
-        :display_name => :dn
-      }
-
-      @@OPTIONAL_CLAIMS = {
-        :groups => :g
-      }
-
-      @@REQUIRED_GROUP_CLAIMS = {
-        :id => :id,
-        :display_name => :dn
-      }
 
       def self.map_required_claims(claims, table, msg="missing required key: %s")
         table.each do |name,claimName|
@@ -92,8 +92,8 @@ module GoInstant
           raise SignerError.new('Signer#sign() requires a user_data Hash')
         end
         claims = user_data.clone
-        Signer.map_required_claims(claims, @@REQUIRED_CLAIMS)
-        Signer.map_optional_claims(claims, @@OPTIONAL_CLAIMS)
+        Signer.map_required_claims(claims, REQUIRED_CLAIMS)
+        Signer.map_optional_claims(claims, OPTIONAL_CLAIMS)
         claims[:aud] = 'goinstant.net'
 
         if claims.has_key?(:g) then
@@ -106,7 +106,7 @@ module GoInstant
             group = group.clone
             msg = "group #{i} missing required key: %s"
             i += 1
-            Signer.map_required_claims(group, @@REQUIRED_GROUP_CLAIMS, msg)
+            Signer.map_required_claims(group, REQUIRED_GROUP_CLAIMS, msg)
           end
         else
           claims[:g] = []
