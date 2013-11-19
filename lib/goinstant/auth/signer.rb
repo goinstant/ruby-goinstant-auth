@@ -11,27 +11,6 @@ module GoInstant
     # Creates JWTs from user-hashes, signing with your GoInstant app secret key.
     class Signer
 
-      # Required user_data properties and their corresponding JWT claim name
-      #
-      REQUIRED_CLAIMS = {
-        :domain => :iss,
-        :id => :sub,
-        :display_name => :dn
-      }
-
-      # Optional user_data properties and their corresponding JWT claim name
-      #
-      OPTIONAL_CLAIMS = {
-        :groups => :g
-      }
-
-      # Required group properties and their corresponding JWT claim name
-      #
-      REQUIRED_GROUP_CLAIMS = {
-        :id => :id,
-        :display_name => :dn
-      }
-
       # Create a Signer with a particular key.
       #
       # A single Signer can be used to create multiple tokens.
@@ -59,40 +38,9 @@ module GoInstant
         end
       end
 
-      # Maps required claims in-place.
-      #
-      # @raise [SignerError] if a required claim is missing
-      # @param claims [Hash] modified to use JWT claim names
-      # @param table [Hash] conversion table of required keys
-      # @param msg [String] message format for the SignerError
-      # @api private
-      def self.map_required_claims(claims, table, msg="missing required key: %s") # :nodoc:
-        table.each do |name,claimName|
-          if !claims.has_key?(name) then
-            raise SignerError.new(msg % name)
-          end
-          claims[claimName] = claims.delete(name)
-        end
-        return claims
-      end
-
-      # Maps optional claims in-place.
-      #
-      # @param claims [Hash] modified to use JWT claim names
-      # @param table [Hash] conversion table of optional keys
-      # @api private
-      def self.map_optional_claims(claims, table)
-        table.each do |name,claimName|
-          if claims.has_key?(name) then
-            claims[claimName] = claims.delete(name)
-          end
-        end
-        return claims
-      end
-
       # Create and sign a token for a user.
       #
-      # @param user_data [String] A Hash containing properties about the user.
+      # @param user_data [Hash] properties about this user.
       #   See README.md for a complete list of options.
       # @param extra_headers [Hash] Optional, additional JWT headers to include.
       #
@@ -132,6 +80,58 @@ module GoInstant
         signing_input = '%s.%s' % [headers, claims].map{ |x| Auth.compact_encode(x) }
         sig = OpenSSL::HMAC::digest('SHA256', @binary_key, signing_input)
         return '%s.%s' % [ signing_input, Auth.encode64(sig) ]
+      end
+
+    private
+
+      # Required user_data properties and their corresponding JWT claim name
+      #
+      REQUIRED_CLAIMS = {
+        :domain => :iss,
+        :id => :sub,
+        :display_name => :dn
+      }
+
+      # Optional user_data properties and their corresponding JWT claim name
+      #
+      OPTIONAL_CLAIMS = {
+        :groups => :g
+      }
+
+      # Required group properties and their corresponding JWT claim name
+      #
+      REQUIRED_GROUP_CLAIMS = {
+        :id => :id,
+        :display_name => :dn
+      }
+
+      # Maps required claims, mutating in-place (caller should clone).
+      #
+      # @raise [SignerError] if a required claim is missing
+      # @param claims [Hash] modified to use JWT claim names
+      # @param table [Hash] conversion table of required keys
+      # @param msg [String] message format for the SignerError
+      def self.map_required_claims(claims, table, msg="missing required key: %s")
+        table.each do |name,claimName|
+          if !claims.has_key?(name) then
+            raise SignerError.new(msg % name)
+          end
+          claims[claimName] = claims.delete(name)
+        end
+        return claims
+      end
+
+      # Maps optional claims, mutating in-place (caller should clone).
+      #
+      # @param claims [Hash] modified to use JWT claim names
+      # @param table [Hash] conversion table of optional keys
+      def self.map_optional_claims(claims, table)
+        table.each do |name,claimName|
+          if claims.has_key?(name) then
+            claims[claimName] = claims.delete(name)
+          end
+        end
+        return claims
       end
 
     end
