@@ -19,7 +19,7 @@ should be in base64url or base64 string format. To get your key, go to [your
 goinstant dashboard](https://goinstant.com/dashboard) and click on your App.
 
 ```ruby
-require 'goinstant_auth'
+require 'goinstant/auth'
 
 signer = GoInstant::Auth::Signer.new(secret_key)
 ```
