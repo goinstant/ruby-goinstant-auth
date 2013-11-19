@@ -2,7 +2,10 @@ require 'json'
 require 'base64'
 require_relative 'auth/signer'
 
+# GoInstant Ruby Modules
 module GoInstant
+
+  # Authentication classes and functions for use with GoInstant
   module Auth
 
     # Pads base64 strings.

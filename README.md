@@ -76,7 +76,7 @@ look like this:
 
 # Methods
 
-### `GoInstant::Auth::Signer.new(secretKey)`
+### `GoInstant::Auth::Signer.new(secret_key)`
 
 Constructs a `Signer` object from a base64url or base64 secret key string.
 
@@ -88,7 +88,7 @@ Creates a JWT as a JWS in Compact Serialization format.  Can be called multiple
 times on the same object, saving you from having to load your secret GoInstant
 application key every time.
 
-`user_data` is an Object with the following required fields, plus any other
+`user_data` is a Hash with the following required fields, plus any other
 custom ones you want to include in the JWT.
 
 - `:domain` - the domain of your website

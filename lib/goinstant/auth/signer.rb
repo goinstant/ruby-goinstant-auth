@@ -3,10 +3,12 @@ require 'openssl'
 
 module GoInstant
   module Auth
+
+    # Thrown when a Signer has problems with its input.
     class SignerError < StandardError
     end
 
-    # Converts user-hashes into JWTs
+    # Creates JWTs from user-hashes, signing with your GoInstant app secret key.
     class Signer
 
       # Required user_data properties and their corresponding JWT claim name
@@ -30,10 +32,15 @@ module GoInstant
         :display_name => :dn
       }
 
-      # Create a Signer with a particular key
+      # Create a Signer with a particular key.
+      #
+      # A single Signer can be used to create multiple tokens.
       #
       # @param secret_key [String] A base64 or base64url format string
       # representing the secret key for your GoInstant App.
+      #
+      # @raise [TypeError] when the key isn't in base64/base64url format.
+      # @raise [StandardError] when the key is too short
       #
       def initialize(secret_key)
         if secret_key.nil? then
@@ -52,6 +59,12 @@ module GoInstant
         end
       end
 
+      # Maps required claims in-place.
+      #
+      # @raise [SignerError] if a required claim is missing
+      # @param claims [Hash] modified to use JWT claim names
+      # @param table [Hash] conversion table of required keys
+      # @param msg [String] message format for the SignerError
       # @api private
       def self.map_required_claims(claims, table, msg="missing required key: %s") # :nodoc:
         table.each do |name,claimName|
@@ -63,6 +76,10 @@ module GoInstant
         return claims
       end
 
+      # Maps optional claims in-place.
+      #
+      # @param claims [Hash] modified to use JWT claim names
+      # @param table [Hash] conversion table of optional keys
       # @api private
       def self.map_optional_claims(claims, table)
         table.each do |name,claimName|
@@ -76,9 +93,10 @@ module GoInstant
       # Create and sign a token for a user.
       #
       # @param user_data [String] A Hash containing properties about the user.
-      # See README.md for a complete list of options.
+      #   See README.md for a complete list of options.
+      # @param extra_headers [Hash] Optional, additional JWT headers to include.
       #
-      # @param extra_headers [Hash={}] Optional, additional JWT headers to include.
+      # @raise [SignerError] if a required user or group claim is missing
       #
       # @return [String] a JWS Compact Serialization format-string representing this user.
       #

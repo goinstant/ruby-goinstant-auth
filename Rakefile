@@ -17,3 +17,6 @@ task :gem do
     sh 'gem build *.gemspec'
 end
 
+task :doc do
+    sh 'yard'
+end
