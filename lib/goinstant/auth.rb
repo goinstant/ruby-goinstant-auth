@@ -1,1 +1,1 @@
-require File.expand_path("../auth/signer", __FILE__)
+require_relative 'auth/signer'

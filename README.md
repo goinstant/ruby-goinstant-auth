@@ -12,6 +12,12 @@ This library is not intended as a general-use JWT library; see JWT-php for
 that. At the time of this writing, GoInstant supports the [JWT IETF draft
 version 8](https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-08).
 
+# Installation
+
+```sh
+gem install goinstant-auth
+```
+
 # Usage
 
 Construct a signer with your goinstant application key. The application key
@@ -67,6 +73,60 @@ look like this:
   }());
 </script>
 ```
+
+# Methods
+
+### `GoInstant::Auth::Signer.new(secretKey)`
+
+Constructs a `Signer` object from a base64url or base64 secret key string.
+
+Throws an Error if the `secretKey` could not be parsed.
+
+### `#sign(user_data, extra_headers={})`
+
+Creates a JWT as a JWS in Compact Serialization format.  Can be called multiple
+times on the same object, saving you from having to load your secret GoInstant
+application key every time.
+
+`user_data` is an Object with the following required fields, plus any other
+custom ones you want to include in the JWT.
+
+- `:domain` - the domain of your website
+- `:id` - the unique, permanent identity of this user on your website
+- `:display_name` - the name to initially display for this user
+- `:groups` - an array of groups, each group requiring:
+  - `:id` - the unique ID of this group, which is handy for defining [GoInstant ACLs](https://developers.goinstant.com/v1/guides/creating_and_managing_acl.html)
+  - `:display_name` - the name to display for this group
+
+`extra_headers` is completely optional.  It's used to define any additional
+[JWS header fields](http://tools.ietf.org/html/draft-ietf-jose-json-web-signature-11#section-4.1)
+that you want to include.
+
+# Technicals
+
+The `sign()` method's `user_data` maps to the following JWT claims:
+
+- `:domain` -> `iss` (standard claim)
+- `:id` -> `sub` (standard claim)
+- `:display_name` -> `dn` (GoInstant private claim)
+- `:groups` -> `g` (GoInstant private claim)
+  - `:id` -> `id` (GoInstant private claim)
+  - `:display_name` -> `dn` (GoInstant private claim)
+- `'goinstant.net'` -> `aud` (standard claim) _automatically added_
+
+For the `extra_headers` parameter in `sign()`, the `alg` and `typ` headers will
+be overridden by this library.
+
+# Support
+
+Email [GoInstant Support](mailto:support@goinstant.com) or stop by [#goinstant
+on freenode](irc://irc.freenode.net/#goinstant).
+
+For responsible disclosures, email [GoInstant Security](mailto:security@goinstant.com).
+
+To [file a bug](https://github.com/goinstant/node-goinstant-auth/issues) or
+[propose a patch](https://github.com/goinstant/node-goinstant-auth/pulls),
+please use github directly.
 
 # Legal
 
