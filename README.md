@@ -52,7 +52,7 @@ jwt = signer.sign({
 ```
 
 This token can be safely inlined into an ERB template.  For example, a fairly
-basic templat for calling [`goinstant.connect`
+basic template for calling [`goinstant.connect`
 call](https://developers.goinstant.com/v1/javascript_api/connect.html) might
 look like this:
 
