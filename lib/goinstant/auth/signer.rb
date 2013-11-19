@@ -1,56 +1,40 @@
 #encoding: UTF-8
 require 'openssl'
-require 'base64'
-require 'json'
 
 module GoInstant
   module Auth
-
-    def self.pad64(str)
-      rem = str.size % 4
-      if rem > 0 then
-        str << ("=" * (4-rem))
-      end
-      return str
-    end
-
-    def self.encode64(str)
-      return Base64.urlsafe_encode64(str).sub(/=+$/,'')
-    end
-
-    def self.decode64(str)
-      str = str.gsub(/\s+/,'').tr('-_','+/').sub(/=+$/,'')
-      return Base64.decode64(pad64(str))
-    end
-
-    def self.compact_decode(str)
-      return JSON.parse(decode64(str))
-    end
-
-    def self.compact_encode(thing)
-      return encode64(JSON.generate(thing))
-    end
-
     class SignerError < StandardError
     end
 
-    REQUIRED_CLAIMS = {
-      :domain => :iss,
-      :id => :sub,
-      :display_name => :dn
-    }
-
-    OPTIONAL_CLAIMS = {
-      :groups => :g
-    }
-
-    REQUIRED_GROUP_CLAIMS = {
-      :id => :id,
-      :display_name => :dn
-    }
-
+    # Converts user-hashes into JWTs
     class Signer
 
+      # Required user_data properties and their corresponding JWT claim name
+      #
+      REQUIRED_CLAIMS = {
+        :domain => :iss,
+        :id => :sub,
+        :display_name => :dn
+      }
+
+      # Optional user_data properties and their corresponding JWT claim name
+      #
+      OPTIONAL_CLAIMS = {
+        :groups => :g
+      }
+
+      # Required group properties and their corresponding JWT claim name
+      #
+      REQUIRED_GROUP_CLAIMS = {
+        :id => :id,
+        :display_name => :dn
+      }
+
+      # Create a Signer with a particular key
+      #
+      # @param secret_key [String] A base64 or base64url format string
+      # representing the secret key for your GoInstant App.
+      #
       def initialize(secret_key)
         if secret_key.nil? then
           raise TypeError.new('Signer requires key in base64url or base64 format')
@@ -68,7 +52,8 @@ module GoInstant
         end
       end
 
-      def self.map_required_claims(claims, table, msg="missing required key: %s")
+      # @api private
+      def self.map_required_claims(claims, table, msg="missing required key: %s") # :nodoc:
         table.each do |name,claimName|
           if !claims.has_key?(name) then
             raise SignerError.new(msg % name)
@@ -78,6 +63,7 @@ module GoInstant
         return claims
       end
 
+      # @api private
       def self.map_optional_claims(claims, table)
         table.each do |name,claimName|
           if claims.has_key?(name) then
@@ -87,6 +73,15 @@ module GoInstant
         return claims
       end
 
+      # Create and sign a token for a user.
+      #
+      # @param user_data [String] A Hash containing properties about the user.
+      # See README.md for a complete list of options.
+      #
+      # @param extra_headers [Hash={}] Optional, additional JWT headers to include.
+      #
+      # @return [String] a JWS Compact Serialization format-string representing this user.
+      #
       def sign(user_data, extra_headers={})
         if !user_data.is_a?(Hash) then
           raise SignerError.new('Signer#sign() requires a user_data Hash')
