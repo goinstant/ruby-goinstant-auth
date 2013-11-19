@@ -79,7 +79,11 @@ look like this:
 
 # Methods
 
-### `GoInstant::Auth::Signer.new(secret_key)`
+## `GoInstant::Auth::Signer`
+
+Re-usable object for creating user tokens.
+
+### `.new(secret_key)`
 
 Constructs a `Signer` object from a base64url or base64 secret key string.
 
