@@ -107,7 +107,8 @@ that you want to include.
 
 # Technicals
 
-The `sign()` method's `user_data` maps to the following JWT claims:
+The `sign()` method's `user_data` maps to the following JWT claims.
+The authoritative list of claims used in GoInstant can be found in the [Users and Authentication Guide](https://developers.goinstant.com/v1/guides/users_and_authentication.html#which-reserved-claims-are-required).
 
 - `:domain` -> `iss` (standard claim)
 - `:id` -> `sub` (standard claim)
