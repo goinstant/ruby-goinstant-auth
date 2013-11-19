@@ -8,5 +8,6 @@ Gem::Specification.new do |s|
   s.email = "support@goinstant.org"
   s.license = "BSD-3-Clause"
 
-  s.files = ["lib/goinstant/auth.rb", "lib/goinstant/auth/signer.rb"]
+  s.files = Dir["{lib}/**/*.rb", "bin/*", "LICENSE", "*.md"]
+  s.require_path = 'lib'
 end
