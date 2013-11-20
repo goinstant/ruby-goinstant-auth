@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = "goinstant-auth"
-  s.version = "1.0.0"
+  s.version = "1.0.1"
   s.summary = "GoInstant Authentication for Your Ruby Application"
   s.description = "Lets your users log-in to your GoInstant app"
   s.homepage = "https://github.com/goinstant/ruby-goinstant-auth"
