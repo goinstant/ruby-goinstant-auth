@@ -129,6 +129,9 @@ be overridden by this library.
 
 # Contributing
 
+If you'd like to contribute to or modify ruby-goinstant-auth, here's a quick
+guide to get you started.
+
 ## Development Dependencies
 
 Base dependencies are as follows.
@@ -158,6 +161,8 @@ bundle install
 ## Testing
 
 Testing is done with RSpec.  Tests are located in the `spec/` folder.
+
+To run the tests:
 
 ```sh
 rake # 'test' is the default
