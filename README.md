@@ -178,6 +178,19 @@ rake doc
 open doc/frames.html
 ```
 
+## Publishing
+
+When publishing `$VERSION` to master.
+
+1. Edit `goinstant-auth.gemspec` and bump the version number
+2. `git add *.gemspec && git commit -m '$VERSION'`
+3. `git tag $VERSION`
+4. `git push --tags origin master`
+5. `rake gem`
+6. `gem push goinstant-auth-$VERSION.gem` - note that there may be other .gem files hanging around so don't be lazy and specify `*.gem`
+
+Check on https://rubygems.org/gems/goinstant-auth to see that it published.
+
 # Support
 
 Email [GoInstant Support](mailto:support@goinstant.com) or stop by [#goinstant
