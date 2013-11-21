@@ -40,7 +40,7 @@ You can then use this `signer` to create as many tokens as you want. The
 optional.
 
 ```ruby
-jwt = signer.sign({
+token = signer.sign({
   :domain => 'example.com', # TODO: replace me
   :id => user.id,
   :display_name => user.full_name,
