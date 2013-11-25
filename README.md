@@ -6,7 +6,7 @@ GoInstant Authentication for Your Ruby Application
 
 This is an implementation of JWT tokens consistent with what's specified in the
 [GoInstant Users and Authentication
-Guide](https://developers.goinstant.com/v1/guides/users_and_authentication.html).
+Guide](https://developers.goinstant.com/v1/security_and_auth/guides/users_and_authentication.html).
 
 This library is not intended as a general-use JWT library.  For a more general
 library, see [progrium/ruby-jwt](https://github.com/progrium/ruby-jwt) (but
@@ -26,7 +26,7 @@ Construct a signer with your goinstant application key. The application key
 should be in base64url or base64 string format. To get your key, go to [your
 goinstant dashboard](https://goinstant.com/dashboard) and click on your App.
 
-:warning: **Remember, the Secret Key needs to be treated like a password!**
+**Remember, the Secret Key needs to be treated like a password!**
 Never share it with your users!
 
 ```ruby
@@ -104,7 +104,7 @@ custom ones you want to include in the JWT.
 - `:id` - the unique, permanent identity of this user on your website
 - `:display_name` - the name to initially display for this user
 - `:groups` - an array of groups, each group requiring:
-  - `:id` - the unique ID of this group, which is handy for defining [GoInstant ACLs](https://developers.goinstant.com/v1/guides/creating_and_managing_acl.html)
+  - `:id` - the unique ID of this group, which is handy for defining [GoInstant ACLs](https://developers.goinstant.com/v1/security_and_auth/guides/creating_and_managing_acl.html)
   - `:display_name` - the name to display for this group
 
 `extra_headers` is completely optional.  It's used to define any additional
@@ -114,7 +114,7 @@ that you want to include.
 # Technicals
 
 The `sign()` method's `user_data` maps to the following JWT claims.
-The authoritative list of claims used in GoInstant can be found in the [Users and Authentication Guide](https://developers.goinstant.com/v1/guides/users_and_authentication.html#which-reserved-claims-are-required).
+The authoritative list of claims used in GoInstant can be found in the [Users and Authentication Guide](https://developers.goinstant.com/v1/security_and_auth/guides/users_and_authentication.html#which-reserved-claims-are-required).
 
 - `:domain` -> `iss` (standard claim)
 - `:id` -> `sub` (standard claim)
