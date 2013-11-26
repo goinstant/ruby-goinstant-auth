@@ -19,7 +19,7 @@ module GoInstant
       # representing the secret key for your GoInstant App.
       #
       # @raise [TypeError] when the key isn't in base64/base64url format.
-      # @raise [StandardError] when the key is too short
+      # @raise [SignerError] when the key is too short
       #
       def initialize(secret_key)
         if secret_key.nil? then
@@ -32,7 +32,7 @@ module GoInstant
         end
 
         if @binary_key.size < 32 then
-          raise StandardError.new(
+          raise SignerError.new(
             'expected key length >= 32 bytes, got %d bytes' % @binary_key.size
           )
         end

@@ -39,7 +39,7 @@ describe GoInstant::Auth::Signer do
   it "complains if too short" do
     expect {
       GoInstant::Auth::Signer.new('abcd')
-    }.to raise_error(StandardError, 'expected key length >= 32 bytes, got 3 bytes')
+    }.to raise_error(GoInstant::Auth::SignerError, 'expected key length >= 32 bytes, got 3 bytes')
   end
 
   def validate_jwt(jwt, expect_claims, expect_sig)
