@@ -56,6 +56,7 @@ module GoInstant
         Signer.map_required_claims(claims, REQUIRED_CLAIMS)
         Signer.map_optional_claims(claims, OPTIONAL_CLAIMS)
         claims[:aud] = 'goinstant.net'
+        claims[:sub] = claims[:sub].to_s
 
         if claims.has_key?(:g) then
           groups = claims[:g]
@@ -68,6 +69,8 @@ module GoInstant
             msg = "group #{i} missing required key: %s"
             i += 1
             Signer.map_required_claims(group, REQUIRED_GROUP_CLAIMS, msg)
+            group[:id] = group[:id].to_s
+            group
           end
         else
           claims[:g] = []
