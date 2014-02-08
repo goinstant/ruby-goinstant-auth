@@ -178,10 +178,34 @@ describe GoInstant::Auth::Signer do
         'iss' => 'example.com',
         'dn' => 'bob',
         'g' => [
-          { 'id' => 1234, 'dn' => 'Group 1234' },
-          { 'id' => 42, 'dn' => 'Meaning Group' }
+          { 'id' => '1234', 'dn' => 'Group 1234' },
+          { 'id' => '42', 'dn' => 'Meaning Group' }
         ]
-      }, '5isd3i1A4so7MwKm0VHWYHuWRy3WwGFipO0kkelNRLU')
+      }, 'do67aKlXv2x5LZa_SWPv-Lbz0d3e2Mwn-H8WrDIDutA')
+    end
+
+    it 'coerces id to strings' do
+      user_data = {
+        :id => 12345, #int
+        :domain => 'example.com',
+        :display_name => 'bob',
+        :groups => [
+          { :id => 1234, :display_name => 'Group 1234' },
+          { :id => 42, :display_name => 'Meaning Group' }
+        ]
+      }
+
+      jwt = @signer.sign(user_data)
+      validate_jwt(jwt, {
+        'aud' => 'goinstant.net',
+        'sub' => '12345',
+        'iss' => 'example.com',
+        'dn' => 'bob',
+        'g' => [
+          { 'id' => '1234', 'dn' => 'Group 1234' },
+          { 'id' => '42', 'dn' => 'Meaning Group' }
+        ]
+      }, '3NvnJpacWHj7BDC3NL00aKNcncZp8jyL-IO1B27ITzI')
     end
   end
 end
